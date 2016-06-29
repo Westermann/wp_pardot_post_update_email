@@ -18,7 +18,9 @@
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_list_ids' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_template_id' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_tags' );
+        register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_template' );
     }
+
 
     function pardot_post_update_email_settings_page() {
         ?>
@@ -72,6 +74,22 @@
                 <tr valign="top">
                 <th scope="row">Pardot Email Tags</th>
                 <td><input type="text" name="pardot_post_update_email_tags" value="<?php echo esc_attr( get_option('pardot_post_update_email_tags') ); ?>" /></td>
+                </tr>
+                
+                <tr valign="top">
+                <th scope="row">Email Template</th>
+                <td>
+                    <?php
+                        $templateEditorSettings = array(
+                            'teeny' => true,
+                            'textarea_rows' => 100,
+                            'textarea_name' => 'pardot_post_update_email_template',
+                            'tabindex' => 1
+                        );
+                        $defaultTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-template.html");
+                        wp_editor(esc_textarea( get_option('pardot_post_update_email_template', $defaultTemplate )), 'pardot-post-update-email-template-editor', $templateEditorSettings);
+                    ?>
+                </td>
                 </tr>
             </table>
 

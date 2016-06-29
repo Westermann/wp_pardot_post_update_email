@@ -80,8 +80,8 @@
 
         $contentPreview = getPreviewText($content);
 
-        $template =  file_get_contents("../wp-content/plugins/pardot_post_update_email/template.html");
-        if (!$template) { throw new Exception("There was no template file found. Please place a template.html in wp-content/plugins/pardot_post_update_email/"); }
+        $defaultTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-template.html");
+        $template = get_option('pardot_post_update_email_template',$defaultTemplate); 
         $templateVariables = array(
             '%%post_title%%',
             '%%post_content%%',
