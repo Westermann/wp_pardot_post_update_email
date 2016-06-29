@@ -28,6 +28,8 @@
         <h2>Pardot Post Updates</h2>
 
         <form method="post" action="options.php">
+
+            <?php submit_button(); ?>
             <?php settings_fields( 'pardot_post_update_email_settings_group' ); ?>
             <?php do_settings_sections( 'pardot_post_update_email_settings_group' ); ?>
             <table class="form-table">
@@ -92,8 +94,6 @@
                 </td>
                 </tr>
             </table>
-
-            <?php submit_button(); ?>
 
         </form>
         </div>
