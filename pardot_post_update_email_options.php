@@ -87,7 +87,7 @@
                             'tabindex' => 1
                         );
                         $defaultTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-template.html");
-                        wp_editor(esc_textarea( get_option('pardot_post_update_email_template', $defaultTemplate )), 'pardot-post-update-email-template-editor', $templateEditorSettings);
+                        wp_editor(get_option('pardot_post_update_email_template', $defaultTemplate ), 'pardot-post-update-email-template-editor', $templateEditorSettings);
                     ?>
                 </td>
                 </tr>
