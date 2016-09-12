@@ -16,9 +16,10 @@
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_subject_prefix' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_campaign_id' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_list_ids' );
-        register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_template_id' );
+//        register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_template_id' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_tags' );
         register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_template' );
+        register_setting( 'pardot_post_update_email_settings_group', 'pardot_post_update_email_text_template' );
     }
 
 
@@ -68,10 +69,12 @@
                 <td><input type="text" name="pardot_post_update_email_list_ids" value="<?php echo esc_attr( get_option('pardot_post_update_email_list_ids') ); ?>" /></td>
                 </tr>
                 
+                <!--
                 <tr valign="top">
                 <th scope="row">Pardot Template Id</th>
                 <td><input type="text" name="pardot_post_update_email_template_id" value="<?php echo esc_attr( get_option('pardot_post_update_email_template_id') ); ?>" /></td>
                 </tr>
+                -->
                 
                 <tr valign="top">
                 <th scope="row">Pardot Email Tags</th>
@@ -79,7 +82,7 @@
                 </tr>
                 
                 <tr valign="top">
-                <th scope="row">Email Template</th>
+                <th scope="row">Email HTML Template</th>
                 <td>
                     <?php
                         $templateEditorSettings = array(
@@ -88,11 +91,24 @@
                             'textarea_name' => 'pardot_post_update_email_template',
                             'tabindex' => 1
                         );
-                        $defaultTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-template.html");
-                        wp_editor(get_option('pardot_post_update_email_template', $defaultTemplate ), 'pardot-post-update-email-template-editor', $templateEditorSettings);
+                        $defaultHtmlTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-html-template.html");
+                        wp_editor(get_option('pardot_post_update_email_template', $defaultHtmlTemplate ), 'pardot-post-update-email-template-editor', $templateEditorSettings);
                     ?>
                 </td>
                 </tr>
+                <tr valign="top">
+                <th scope="row">Email Text Template (fallback for html)</th>
+                <td>
+                    <?php
+                        $templateEditorSettings = array(
+                            'textarea_rows' => 50,
+                            'textarea_name' => 'pardot_post_update_email_text_template',
+                            'tabindex' => 1
+                        );
+                        $defaultTextTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-text-template.html");
+                        wp_editor(get_option('pardot_post_update_email_text_template', $defaultTextTemplate ), 'pardot-post-update-email-template-editor', $templateEditorSettings);
+                    ?>
+                </td>
             </table>
 
         </form>

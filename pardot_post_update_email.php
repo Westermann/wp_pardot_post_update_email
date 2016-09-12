@@ -2,9 +2,9 @@
     /*
     Plugin Name: Pardot Post Update Email 
     Plugin URI: www.zappistore.com
-    Description: This plugin sends an email to a pardot list using a selected pardot template when a new post is set form pending to published.
+    Description: This plugin sends an email to a pardot list when a new post is set from pending to published.
     Author: Jonas Paul Westermann
-    Version: 1.0
+    Version: 1.1
     Author URI: www.github.com/westermann
     */
 
@@ -61,8 +61,8 @@
 
     function sendPardotEmail( $post ) {
         $authorId       = $post->post_author;
-        $authorName     = get_the_author_meta( 'display_name', $author );
-        $euthorEmail    = get_the_author_meta( 'user_email', $author );
+        $authorName     = get_the_author_meta( 'display_name', $authorId );
+        $authorEmail    = get_the_author_meta( 'user_email', $authorId );
         $postTitle      = $post->post_title;
         $postLink       = get_permalink( $post );
         $imageLink      = wp_get_attachment_image_src( get_post_thumbnail_id( $post->ID ), 'single-post-thumbnail' )[0];
@@ -70,7 +70,7 @@
 
         $replyToEmail           = get_option('pardot_post_update_email_replyto_email','No replyto email set.');
         $subjectPrefix          = get_option('pardot_post_update_email_subject_prefix','No subject prefix set.');
-        $pardotEmailTemplateId  = get_option('pardot_post_update_email_template_id','No template id set.');
+//        $pardotEmailTemplateId  = get_option('pardot_post_update_email_template_id','No template id set.');
         $pardotCampaignId       = get_option('pardot_post_update_email_campaign_id','No campaign id set.');
         $pardotListIds          = get_option('pardot_post_update_email_list_ids','No list ids set.');
         $pardotTags             = get_option('pardot_post_update_email_tags','No tags set.');
@@ -80,8 +80,10 @@
 
         $contentPreview = getPreviewText($content);
 
-        $defaultTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-template.html");
-        $template = get_option('pardot_post_update_email_template',$defaultTemplate); 
+        $defaultHtmlTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-html-template.html");
+        $defaultTextTemplate = file_get_contents("../wp-content/plugins/pardot_post_update_email/default-text-template.html");
+        $htmlTemplate = get_option('pardot_post_update_email_template',$defaultHtmlTemplate); 
+        $textTemplate = get_option('pardot_post_update_email_text_template',$defaultTextTemplate);
         $templateVariables = array(
             '%%post_title%%',
             '%%post_content%%',
@@ -94,7 +96,8 @@
             $postLink,
             $imageLink
         );
-        $htmlTemplate = str_replace($templateVariables, $inputs, $template);
+        $htmlContent = str_replace($templateVariables, $inputs, $htmlTemplate);
+        $textContent = str_replace($templateVariables, $inputs, $textTemplate); 
 
         $authRes = callPardotApi(
             'https://pi.pardot.com/api/login/version/3',
@@ -107,7 +110,7 @@
             'POST'
         );
         $pardotApiKey = json_decode($authRes, true)[api_key];
-        
+
         $emailSendRes = callPardotApi(
             'https://pi.pardot.com/api/email/version/3/do/send',
             array(
@@ -117,12 +120,13 @@
                 'from_name' => $authorName,
                 'from_email' => $authorEmail,
                 'replyto_email' => $replyToEmail,
-                'html_content' => $htmlTemplate,
+                'html_content' => $htmlContent,
+                'text_content' => $textContent,
                 'list_ids' => $pardotListIds,
                 'tags' => $pardotTags,
                 'name' => $subjectPrefix . ' ' . $postTitle,
                 'subject' => $postTitle,
-                'email_template_id' => $pardotEmailTemplateId,
+//                'email_template_id' => $pardotEmailTemplateId,
                 'format' => 'json' 
             ),
             'POST'
