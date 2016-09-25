@@ -1,4 +1,4 @@
-=== Pardot Post Update Email Plugin ===
+=== Wordpress Pardot Post Update Email Plugin ===
 
 Contributors: jonas@zappistore.com
 
