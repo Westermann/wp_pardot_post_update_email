@@ -1,4 +1,5 @@
-=== Plugin Name ===
+=== Pardot Post Update Email Plugin ===
+
 Contributors: jonas@zappistore.com
 Tags: pardot, newsletter, updates
 
